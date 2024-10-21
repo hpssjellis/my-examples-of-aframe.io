@@ -7,7 +7,7 @@
   <body>
 
     <div style="position:relative; z-index:10;" >
-      <input type=button  value="Save as gLTF"   onclick="saveAsGLTF()"><br>
+      <input type=button  value="Save as gLTF"   onclick="mySaveGLTF()"><br>
      Filename: <input id="mySaveName" type=text   value="scene.gltf" >
     </div>
     
@@ -20,16 +20,16 @@
     </a-scene>
 
     <script>
-      function saveAsGLTF() {
+      function mySaveGLTF() {
         const myScene1Exported = document.getElementById('mySceneContainer').object3D;
         const myExporter = new THREE.GLTFExporter();
         
         myExporter.parse(myScene1Exported, function (gltf) {
-          const blob = new Blob([JSON.stringify(gltf)], { type: 'application/json' });
-          const link = document.createElement('a');
-          link.href = URL.createObjectURL(blob);
-          link.download = document.getElementById('mySaveName').value;
-          link.click();
+          const myBlob = new Blob([JSON.stringify(gltf)], { type: 'application/json' });
+          const myLink = document.createElement('a');
+          myLink.href = URL.createObjectURL(myBlob);
+          myLink.download = document.getElementById('mySaveName').value;
+          myLink.click();
         });
         
       }
