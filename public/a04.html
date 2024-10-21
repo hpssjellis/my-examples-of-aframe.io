@@ -21,6 +21,9 @@
     <script>
       function saveAsGLTF() {
         const sceneEl = document.querySelector('a-scene').object3D;
+
+        //  const sceneEl = document.getElementById('scene').object3D;
+        
         const exporter = new THREE.GLTFExporter();
         
         exporter.parse(sceneEl, function (gltf) {
