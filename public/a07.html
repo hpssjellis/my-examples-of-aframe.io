@@ -5,14 +5,9 @@
 
   </head>
   <body>
- <!--   <div id="saveButton"   style=" position: absolute;top: 10px;left: 10px;z-index: 10;padding: 10px;background-color: white;border: 1px solid #ccc;cursor: pointer;"  onclick="saveAsGLTF()">Save as gLTF</div>
-
-    <input type=button value="Save as gLTF"  style="position:absolute; top:10px; left:10px; z-index:10;  " onclick="saveAsGLTF()">
-    <input id="mySaveName" type=text value="scene.gltf"  style="position:absolute; top:10px; left:200px; z-index:10;  " >
-   -->
     
-    <input type=button value="Save as gLTF"  style="position:relative; top:10px; left:10px; z-index:10;  " onclick="saveAsGLTF()">
-    <input id="mySaveName" type=text value="scene.gltf"  style="position:relative; z-index:10;  " >
+    <input type=button style="position:relative; z-index:10;"  value="Save as gLTF"   onclick="saveAsGLTF()">
+    <input id="mySaveName" type=text  style="position:relative; z-index:10;"  value="scene.gltf" >
     
     <a-scene id="scene">
       <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
@@ -24,7 +19,6 @@
 
     <script>
       function saveAsGLTF() {
-      //  const sceneEl = document.querySelector('a-scene').object3D;
         const sceneEl = document.getElementById('scene').object3D;
         const exporter = new THREE.GLTFExporter();
         
@@ -35,6 +29,7 @@
           link.download = document.getElementById('mySaveName').value;
           link.click();
         });
+        
       }
     </script>
   </body>
