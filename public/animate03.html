@@ -1,0 +1,18 @@
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/aframe@1.6.0"></script>
+  </head>
+  <body>
+    <a-scene>
+      <!-- Load the animated gLTF model -->
+      <a-entity 
+        gltf-model="url(https://hpssjellis.github.io/my-examples-of-aframe.io/public/more-bvh.mpg4)"
+        animation-mixer
+        position="0 1.6 -3">
+      </a-entity>
+      
+      <!-- Add a sky to the scene -->
+      <a-sky color="#ECECEC"></a-sky>
+    </a-scene>
+  </body>
+</html>
