@@ -8,7 +8,7 @@
  <!--   <div id="saveButton"   style=" position: absolute;top: 10px;left: 10px;z-index: 10;padding: 10px;background-color: white;border: 1px solid #ccc;cursor: pointer;"  onclick="saveAsGLTF()">Save as gLTF</div>
    -->
     <input type=button value="Save as gLTF"  style="position:absolute; top:10px; left:10px; z-index:10; padding:10px; background-color:white; border:1px solid #ccc; cursor:pointer; " onclick="saveAsGLTF()">
-    <input type=text value="scene.gltf"  style="position:absolute; top:10px; left:200px; z-index:10;  " >
+    <input id="mySaveName" type=text value="scene.gltf"  style="position:absolute; top:10px; left:200px; z-index:10;  " >
     
     <a-scene id="scene">
       <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
@@ -28,7 +28,7 @@
           const blob = new Blob([JSON.stringify(gltf)], { type: 'application/json' });
           const link = document.createElement('a');
           link.href = URL.createObjectURL(blob);
-          link.download = 'scene.gltf';
+          link.download = document.getElementById('mySaveName').value;
           link.click();
         });
       }
