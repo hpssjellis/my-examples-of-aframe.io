@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/aframe@1.6.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.125.2/examples/js/exporters/GLTFExporter.js"></script>
+
+  </head>
+  <body>
+ <!--   <div id="saveButton"   style=" position: absolute;top: 10px;left: 10px;z-index: 10;padding: 10px;background-color: white;border: 1px solid #ccc;cursor: pointer;"  onclick="saveAsGLTF()">Save as gLTF</div>
+   -->
+    <input type=button value="Save as gLTF"  style="position:absolute; top:10px; left:10px; z-index:10; padding:10px; background-color:white; border:1px solid #ccc; cursor:pointer; " onclick="saveAsGLTF()">
+    <input type=text value="scene.gltf"  style="position:absolute; top:10px; left:200px; z-index:10;  " >
+    
+    <a-scene id="scene">
+      <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+      <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+      <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+      <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+      <a-sky color="#ECECEC"></a-sky>
+    </a-scene>
+
+    <script>
+      function saveAsGLTF() {
+      //  const sceneEl = document.querySelector('a-scene').object3D;
+        const sceneEl = document.getElementById('scene').object3D;
+        const exporter = new THREE.GLTFExporter();
+        
+        exporter.parse(sceneEl, function (gltf) {
+          const blob = new Blob([JSON.stringify(gltf)], { type: 'application/json' });
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = 'scene.gltf';
+          link.click();
+        });
+      }
+    </script>
+  </body>
+</html>
