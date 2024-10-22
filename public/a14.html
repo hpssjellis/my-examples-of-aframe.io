@@ -8,11 +8,11 @@
       Button: <input type="button" value="Save as gLTF" onclick="mySaveGLTF()"><br>
       Filename: <input id="mySaveName" type="text" value="scene.gltf">
     </div>
-    
+
     <a-scene id="mySceneContainer">
-      <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9" animation="property: position; to: 1 0.5 -3; loop: true; dur: 2000"></a-box>
-      <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E" animation="property: scale; to: 2 2 2; loop: true; dir: alternate; dur: 2000"></a-sphere>
-      <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D" animation="property: rotation; to: 360 0 0; loop: true; dur: 2000"></a-cylinder>
+      <a-box id="myBox" position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9" animation="property: position; to: 1 0.5 -3; loop: true; dur: 2000"></a-box>
+      <a-sphere id="mySphere" position="0 1.25 -5" radius="1.25" color="#EF2D5E" animation="property: scale; to: 2 2 2; loop: true; dir: alternate; dur: 2000"></a-sphere>
+      <a-cylinder id="myCylinder" position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D" animation="property: rotation; to: 360 0 0; loop: true; dur: 2000"></a-cylinder>
       <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
       <a-sky color="#ECECEC"></a-sky>
     </a-scene>
@@ -21,14 +21,48 @@
       function mySaveGLTF() {
         const myScene1Exported = document.getElementById('mySceneContainer').object3D;
         const myExporter = new THREE.GLTFExporter();
+
+        // Export animations as keyframes
+        const myClips = [];
         
-        myExporter.parse(myScene1Exported, function (gltf) {
-          const myBlob = new Blob([JSON.stringify(gltf)], { type: 'application/json' });
-          const myLink = document.createElement('a');
-          myLink.href = URL.createObjectURL(myBlob);
-          myLink.download = document.getElementById('mySaveName').value;
-          myLink.click();
-        });
+        // Function to convert A-Frame animations to keyframe tracks
+        function addAnimationClip(entity, property, from, to, duration) {
+          const times = [0, duration / 1000];  // Keyframes at start and end time (in seconds)
+          const values = [...from, ...to];  // From and to values for the animation
+
+          const track = new THREE.VectorKeyframeTrack(
+            `${entity.id}.${property}`, times, values
+          );
+          
+          const clip = new THREE.AnimationClip(`${entity.id}Animation`, duration / 1000, [track]);
+          myClips.push(clip);
+        }
+
+        // Convert A-Frame animations to keyframes
+        const box = document.getElementById('myBox').object3D;
+        addAnimationClip(box, 'position', [-1, 0.5, -3], [1, 0.5, -3], 2000);
+
+        const sphere = document.getElementById('mySphere').object3D;
+        addAnimationClip(sphere, 'scale', [1, 1, 1], [2, 2, 2], 2000);
+
+        const cylinder = document.getElementById('myCylinder').object3D;
+        addAnimationClip(cylinder, 'rotation', [0, 45, 0], [360, 0, 0], 2000);
+
+        // Parse the scene and include animations
+        myExporter.parse(
+          myScene1Exported,
+          function (gltf) {
+            // Add animations to the glTF file
+            gltf.animations = myClips;
+
+            const myBlob = new Blob([JSON.stringify(gltf)], { type: 'application/json' });
+            const myLink = document.createElement('a');
+            myLink.href = URL.createObjectURL(myBlob);
+            myLink.download = document.getElementById('mySaveName').value;
+            myLink.click();
+          },
+          { binary: false }
+        );
       }
     </script>
   </body>
