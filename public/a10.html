@@ -1,0 +1,63 @@
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/aframe@1.6.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.125.2/examples/js/exporters/GLTFExporter.js"></script>
+  </head>
+  <body>
+    <div style="position:relative; z-index:10;">
+      Button: <input type="button" value="Save as gLTF" onclick="mySaveGLTF()"><br>
+      Filename: <input id="mySaveName" type="text" value="scene.gltf">
+    </div>
+    
+    <a-scene id="mySceneContainer">
+      <a-box id="box" position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+      <a-sphere id="sphere" position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+      <a-cylinder id="cylinder" position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+      <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+      <a-sky color="#ECECEC"></a-sky>
+    </a-scene>
+
+    <script>
+      AFRAME.registerComponent('animate', {
+        init: function () {
+          const el = this.el;
+          const object3D = el.object3D;
+
+          if (el.id === 'box') {
+            const moveAnimation = new THREE.AnimationClip('move', -1, [
+              new THREE.VectorKeyframeTrack('.position', [0, 2], [-1, 0.5, -3, 1, 0.5, -3])
+            ]);
+            object3D.animations = [moveAnimation];
+          } else if (el.id === 'sphere') {
+            const scaleAnimation = new THREE.AnimationClip('scale', -1, [
+              new THREE.VectorKeyframeTrack('.scale', [0, 2], [1, 1, 1, 2, 2, 2])
+            ]);
+            object3D.animations = [scaleAnimation];
+          } else if (el.id === 'cylinder') {
+            const rotateAnimation = new THREE.AnimationClip('rotate', -1, [
+              new THREE.VectorKeyframeTrack('.rotation[y]', [0, 2], [0, Math.PI * 2])
+            ]);
+            object3D.animations = [rotateAnimation];
+          }
+        }
+      });
+
+      document.querySelectorAll('a-box, a-sphere, a-cylinder').forEach(el => {
+        el.setAttribute('animate', '');
+      });
+
+      function mySaveGLTF() {
+        const myScene1Exported = document.getElementById('mySceneContainer').object3D;
+        const myExporter = new THREE.GLTFExporter();
+        
+        myExporter.parse(myScene1Exported, function (gltf) {
+          const myBlob = new Blob([JSON.stringify(gltf)], { type: 'application/json' });
+          const myLink = document.createElement('a');
+          myLink.href = URL.createObjectURL(myBlob);
+          myLink.download = document.getElementById('mySaveName').value;
+          myLink.click();
+        });
+      }
+    </script>
+  </body>
+</html>
