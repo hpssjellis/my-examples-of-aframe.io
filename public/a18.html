@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/aframe@1.6.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.125.2/examples/js/exporters/GLTFExporter.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.125.2/examples/js/loaders/GLTFLoader.js"></script>
+  </head>
+  <body>
+    <div style="position:relative; z-index:10;">
+      Button: <input type="button" value="Save as gLTF" onclick="mySaveGLTF()"><br>
+      Filename: <input id="mySaveName" type="text" value="scene.gltf"><br>
+      Upload: <input type="file" id="gltfUpload" accept=".gltf, .glb" onchange="loadGLTF(event)">
+    </div>
+    
+    <a-scene id="mySceneContainer">
+      <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+      <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+      <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+      <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+      <a-sky color="#ECECEC"></a-sky>
+    </a-scene>
+
+    <script>
+      function mySaveGLTF() {
+        const myScene1Exported = document.getElementById('mySceneContainer').object3D;
+        const myExporter = new THREE.GLTFExporter();
+        
+        myExporter.parse(myScene1Exported, function (gltf) {
+          const myBlob = new Blob([JSON.stringify(gltf)], { type: 'application/json' });
+          const myLink = document.createElement('a');
+          myLink.href = URL.createObjectURL(myBlob);
+          myLink.download = document.getElementById('mySaveName').value;
+          myLink.click();
+        });
+      }
+
+      function loadGLTF(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          const scene = document.getElementById('mySceneContainer').object3D;
+          const loader = new THREE.GLTFLoader();
+          
+          // Clear existing objects
+          while (scene.children.length > 0) {
+            scene.remove(scene.children[0]);
+          }
+          
+          loader.parse(e.target.result, '', function(gltf) {
+            scene.add(gltf.scene);
+          });
+        };
+        
+        reader.readAsArrayBuffer(file);
+      }
+    </script>
+  </body>
+</html>
